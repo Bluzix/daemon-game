@@ -1,7 +1,9 @@
 // Is this the first keypress to close the Start Menu?
 let firstKey = true;
 
-// TODO: does world canvas need to be that big?
+// Are we still waiting for the player to load the game?
+let loadingGame = true;
+
 let canvas = document.getElementById('world');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
@@ -12,6 +14,15 @@ let animateId;
 
 let room;
 let player;
+
+// "Save Slot" names
+let savePrefix = "daemon_";
+let lbSlot1 = savePrefix + "slot1";
+let lbSlot2 = savePrefix + "slot2";
+let lbSlot3 = savePrefix + "slot3";
+
+// Currently loaded Save File
+let currentSave;
 
 /**
  * Sounds
@@ -72,13 +83,81 @@ function init(){
     animate();
 };
 
+function openSlotSelect(){
+  // hide Start Screent
+  let startScreen = document.getElementById("start_screen");
+  startScreen.style.display = "none"
+
+  // target "Slot Select" buttons
+  let btnSlot1 = document.getElementById("slot1");
+  let btnSlot2 = document.getElementById("slot2");
+  let btnSlot3 = document.getElementById("slot3");
+
+  // check localStorage for usage
+  if (localStorage.getItem(lbSlot1)){
+    btnSlot1.innerHTML = "Continue Slot 1";
+  }
+  else{
+    btnSlot1.innerHTML = "New Game";
+  }
+  if (localStorage.getItem(lbSlot2)){
+    btnSlot2.innerHTML = "Continue Slot 2";
+  }
+  else{
+    btnSlot2.innerHTML = "New Game";
+  }
+  if (localStorage.getItem(lbSlot3)){
+    btnSlot3.innerHTML = "Continue Slot 3";
+  }
+  else{
+    btnSlot3.innerHTML = "New Game";
+  }
+
+  // display "Slot Select" Screen
+  let saveSelect = document.getElementById("save_select")
+  saveSelect.style.display = "block";
+}
+
 function startGame(){
-    let startScreen = document.getElementById("start_screen");
+    let startScreen = document.getElementById("save_select");
     startScreen.style.display = "none";
     canvas.style.display = "block";
     init();
     //music.play();
 };
+
+function useSlot(selectedSlot){
+  // evalute selectedSlot
+  let currentSlot;
+
+  switch(selectedSlot){
+    case 0:
+      currentSlot = lbSlot1;
+      break;
+    case 1:
+      currentSlot = lbSlot2;
+      break;
+    case 2:
+      currentSlot = lbSlot3;
+      break;
+  }
+
+  // load the game based on the currentSlot
+  if (localStorage.getItem(currentSlot)){
+    // Load from localStorage
+    currentSave = JSON.parse(localStorage.getItem(currentSlot));
+  }
+  else{
+    // Create a New Game
+    currentSave = new SaveFile();
+  }
+
+  // we've loaded the game
+  loadingGame = false;
+  
+  // start the game
+  startGame();
+}
 
 function rectCollision(rect1, rect2){
     if (rect1.x < rect2.x + rect2.width &&
@@ -93,9 +172,9 @@ function rectCollision(rect1, rect2){
 }
 
 document.addEventListener('keydown', function(e){
-    if(firstKey){
+    if(firstKey || loadingGame){
         firstKey = false;
-        startGame();
+        openSlotSelect();
     // was }else if(player.launching && !shop.open){
     }else if(player.launching){
         player.launch();
@@ -111,9 +190,9 @@ document.addEventListener('keyup', function(e){
 });
 
 canvas.addEventListener('touchstart', function(e){
-    if(firstKey){
+    if(firstKey || loadingGame){
         firstKey = false;
-        startGame();
+        openSlotSelect();
     // was }else if(player.launching && !shop.open){
     }else if(player.launching){
         player.launch();
@@ -125,9 +204,9 @@ canvas.addEventListener('touchstart', function(e){
 });
 
 document.addEventListener('mousedown', function(){
-    if(firstKey){
+    if(firstKey || loadingGame){
         firstKey = false;
-        startGame();
+        openSlotSelect();
     // was }else if(player.launching && !shop.open){
     }else if(player.launching){
         player.launch();

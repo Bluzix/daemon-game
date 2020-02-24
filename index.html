@@ -16,6 +16,15 @@
       <p class="blink">Press Any Key to Start</p>
     </div>
   </div>
+  <!-- This div will show after "starting" the game -->
+  <div id="save_select">
+    <div class="select-wrapper">
+      <h1>Select File</h1>
+      <button id="slot1" onclick="useSlot(0)">Slot 1</button>
+      <button id="slot2" onclick="useSlot(1)">Slot 2</button>
+      <button id="slot3" onclick="useSlot(2)">Slot 3</button>
+    </div>
+  </div>
   <!-- This canvas will be used to draw everything. -->
   <canvas id="world"></canvas>
 </body>
