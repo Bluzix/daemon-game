@@ -5,11 +5,16 @@
 *   how the SaveFile object should be structured.
 */
 class SaveFile{
-  /*
+  /**
   * empty constructor
   * Creates a SaveFile object for a "new game"
   */
   constructor(){
+    // current Health and Ammo
+    this.hp = 99;
+    this.filledTanks = 0;
+    this.heldMissles = 0;
+
     // pickups
     this.abilities = [];
     this.tanks = [];
@@ -20,17 +25,18 @@ class SaveFile{
     this.saveRow = 0;
     this.saveCol = 0;
 
-    // explored areas: 2D Array [gridRow, gridColumn]
-    this.testArea = generateGrid(1,1);
+    // explored areas: Array of 2D Arrays [gridRow, gridColumn]
+    // explored[0] = Test Area
+    this.explored = [generateGrid(1,1)];
   }
 }
 
-/*
+/**
 * Function generateGrid
 * Generates an unexplored Grid that is gridRow by gridColumn Cells.
 *
-* @param gridRow: an integer for the number of Rows in the Grid
-* @param gridColumn: an integer for the number of Columns in the Grid
+* @param {integer} gridRow is the number of Rows in the Grid
+* @param {integer} gridColumn is the number of Columns in the Grid
 */
 function generateGrid(gridRow, gridColumn){
   // init Row collector (complete Grid)
