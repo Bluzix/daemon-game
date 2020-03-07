@@ -183,16 +183,20 @@ function useSlot(selectedSlot){
 function deleteSlot(selectedSlot){
   // evalute selectedSlot
   let currentSlot;
+  let updateBtn;
 
   switch(selectedSlot){
     case 0:
       currentSlot = lbSlot1;
+      updateBtn = document.getElementById("slot1");
       break;
     case 1:
       currentSlot = lbSlot2;
+      updateBtn = document.getElementById("slot2");
       break;
     case 2:
       currentSlot = lbSlot3;
+      updateBtn = document.getElementById("slot3");
       break;
   }
 
@@ -201,18 +205,7 @@ function deleteSlot(selectedSlot){
 
   if (choice){
     localStorage.removeItem(currentSlot);
-
-    switch(selectedSlot){
-      case 0:
-        document.getElementById("slot1").innerHTML = "New Game";
-        break;
-      case 1:
-        document.getElementById("slot2").innerHTML = "New Game";
-        break;
-      case 2:
-        document.getElementById("slot3").innerHTML = "New Game";
-        break;
-    }
+    updateBtn.innerHTML = "New Game";
   }
 }
 
