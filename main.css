@@ -67,10 +67,19 @@ canvas{
   display: none;
 }
 
-#save_select button{
+#save_select div.buttonHolder{
   display: block;
   margin: 10px auto;
   padding: 5px 30px;
+}
+
+#save_select button.slotBtn{
+  margin-right: 10px;
+  padding: 5px;
+}
+
+#save_select button.deleteBtn{
+  padding: 5px;
 }
 
 .select-wrapper{

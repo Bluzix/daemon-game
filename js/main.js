@@ -24,6 +24,9 @@ let lbSlot3 = savePrefix + "slot3";
 // Currently loaded Save File
 let currentSave;
 
+// What is the Slot of the Currently Loaded Save File
+let loadedSlot;
+
 /**
  * Sounds
  */
@@ -83,6 +86,10 @@ function init(){
     animate();
 };
 
+/**
+* Function openSlotSelect
+* Used to open the Save Slot selection Menu.
+*/
 function openSlotSelect(){
   // hide Start Screent
   let startScreen = document.getElementById("start_screen");
@@ -126,7 +133,54 @@ function startGame(){
     //music.play();
 };
 
+/**
+* Function useSlot
+* Used to "Load the Game" stored in the localStorage represented by the clicked
+* slot.
+*
+* @param {integer} selectedSlot the number of the slot: 0 = Slot 1, 1 = Slot 2,
+* 2 = Slot 3
+*/
 function useSlot(selectedSlot){
+  // evalute selectedSlot
+  switch(selectedSlot){
+    case 0:
+      loadedSlot = lbSlot1;
+      break;
+    case 1:
+      loadedSlot = lbSlot2;
+      break;
+    case 2:
+      loadedSlot = lbSlot3;
+      break;
+  }
+
+  // load the game based on the loadedSlot
+  if (localStorage.getItem(loadedSlot)){
+    // Load from localStorage
+    currentSave = JSON.parse(localStorage.getItem(loadedSlot));
+  }
+  else{
+    // Create a New Game
+    currentSave = new SaveFile();
+  }
+
+  // we've loaded the game
+  loadingGame = false;
+
+  // start the game
+  startGame();
+}
+
+/**
+* Function deleteSlot
+* Used to delete the "Saved Game" stored in the localStorage represented by the
+* clicked slot.
+*
+* @param {integer} selectedSlot the number of the slot: 0 = Slot 1, 1 = Slot 2,
+* 2 = Slot 3
+*/
+function deleteSlot(selectedSlot){
   // evalute selectedSlot
   let currentSlot;
 
@@ -142,21 +196,24 @@ function useSlot(selectedSlot){
       break;
   }
 
-  // load the game based on the currentSlot
-  if (localStorage.getItem(currentSlot)){
-    // Load from localStorage
-    currentSave = JSON.parse(localStorage.getItem(currentSlot));
-  }
-  else{
-    // Create a New Game
-    currentSave = new SaveFile();
-  }
+  // confirm deletion of Save at Slot
+  let choice = confirm("Delete the Saved Game from Slot " + (selectedSlot+1) + "?");
 
-  // we've loaded the game
-  loadingGame = false;
-  
-  // start the game
-  startGame();
+  if (choice){
+    localStorage.removeItem(currentSlot);
+
+    switch(selectedSlot){
+      case 0:
+        document.getElementById("slot1").innerHTML = "New Game";
+        break;
+      case 1:
+        document.getElementById("slot2").innerHTML = "New Game";
+        break;
+      case 2:
+        document.getElementById("slot3").innerHTML = "New Game";
+        break;
+    }
+  }
 }
 
 function rectCollision(rect1, rect2){
@@ -170,6 +227,8 @@ function rectCollision(rect1, rect2){
         return false;
     }
 }
+
+/*** Controls ***/
 
 document.addEventListener('keydown', function(e){
     if(firstKey || loadingGame){

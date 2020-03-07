@@ -20,9 +20,18 @@
   <div id="save_select">
     <div class="select-wrapper">
       <h1>Select File</h1>
-      <button id="slot1" onclick="useSlot(0)">Slot 1</button>
-      <button id="slot2" onclick="useSlot(1)">Slot 2</button>
-      <button id="slot3" onclick="useSlot(2)">Slot 3</button>
+      <div class="buttonHolder">
+        <button id="slot1" class="slotBtn" onclick="useSlot(0)">Slot 1</button>
+        <button class="deleteBtn" onclick="deleteSlot(0)">Delete Slot 1</button>
+      </div>
+      <div class="buttonHolder">
+        <button id="slot2" class="slotBtn" onclick="useSlot(1)">Slot 2</button>
+        <button class="deleteBtn" onclick="deleteSlot(1)">Delete Slot 2</button>
+      </div>
+      <div class="buttonHolder">
+        <button id="slot3" class="slotBtn" onclick="useSlot(2)">Slot 3</button>
+        <button class="deleteBtn" onclick="deleteSlot(2)">Delete Slot 3</button>
+      </div>
     </div>
   </div>
   <!-- This canvas will be used to draw everything. -->
