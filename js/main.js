@@ -4,12 +4,17 @@ let firstKey = true;
 // Are we still waiting for the player to load the game?
 let loadingGame = true;
 
-let canvas = document.getElementById('world');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+let world = document.getElementById('world');
+/* The world will be a static height & width
+world.width = innerWidth;
+world.height = innerHeight;
+*/
 
-let ctx = canvas.getContext('2d');
+let worldCtx = world.getContext('2d');
 
+// Initialize the viewport
+let viewport = document.getElementById('viewport');
+let camera = new Ratiovision(16, 9, viewport);
 let animateId;
 
 let room;
@@ -39,8 +44,8 @@ music.volume = 0.4;*/
 
 
 function update(){
-    room.update();
-    player.update(room.height);
+    //room.update();
+    //player.update(room.height);
     /*for(let i = 0; i < beeArray.length; i++){
         beeArray[i].update();
         //check to see if the player hit it
@@ -52,8 +57,8 @@ function update(){
 }
 
 function draw(){
-    room.draw(ctx,canvas,player);
-    player.draw(ctx,room.height);
+    //room.draw(worldCtx,world,player);
+    //player.draw(worldCtx,room.height);
     /*for(let i = 0; i < beeArray.length; i++){
         beeArray[i].draw(ctx);
     }*/
@@ -62,18 +67,21 @@ function draw(){
     /*if (!player.launching){
         player.slowDown(room.gravity);
     }*/
+    camera.drawGrid();
 }
 
 function animate(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, world.width, world.height);
+    camera.clear();
     update();
     draw();
     animateId = requestAnimationFrame(animate);
+
 }
 
 function init(){
-    room = new Room(worldObjects.x, worldObjects.y, worldObjects.width, worldObjects.height);
-    player = new Player(100,room.height-100,10,20);
+    //room = new Room(worldObjects.x, worldObjects.y, worldObjects.width, worldObjects.height);
+    //player = new Player(100,room.height-100,10,20);
 
     //create random locations for bees
     /*for(let i = 0; i < 50; i++){
@@ -128,7 +136,7 @@ function openSlotSelect(){
 function startGame(){
     let startScreen = document.getElementById("save_select");
     startScreen.style.display = "none";
-    canvas.style.display = "block";
+    viewport.style.display = "block";
     init();
     //music.play();
 };
@@ -228,31 +236,31 @@ document.addEventListener('keydown', function(e){
         firstKey = false;
         openSlotSelect();
     // was }else if(player.launching && !shop.open){
-    }else if(player.launching){
+    }/*else if(player.launching){
         player.launch();
         //jumpSound.play();
     // was }else if(!player.gliding && !shop.open){
     }else if(!player.gliding){
         player.glide();
-    }
+    }*/
 });
 
 document.addEventListener('keyup', function(e){
 
 });
 
-canvas.addEventListener('touchstart', function(e){
+viewport.addEventListener('touchstart', function(e){
     if(firstKey || loadingGame){
         firstKey = false;
         openSlotSelect();
     // was }else if(player.launching && !shop.open){
-    }else if(player.launching){
+    }/*else if(player.launching){
         player.launch();
         //jumpSound.play();
     // was }else if(!player.gliding && !shop.open){
     }else if(!player.gliding){
         player.glide();
-    }
+    }*/
 });
 
 document.addEventListener('mousedown', function(){
@@ -260,11 +268,17 @@ document.addEventListener('mousedown', function(){
         firstKey = false;
         openSlotSelect();
     // was }else if(player.launching && !shop.open){
-    }else if(player.launching){
+    }/*else if(player.launching){
         player.launch();
         //jumpSound.play();
     // was }else if(!player.gliding && !shop.open){
     }else if(!player.gliding){
         player.glide();
-    }
-})
+    }*/
+});
+
+/*** When the Window is Resized ***/
+window.addEventListener('resize', function(){
+  // resize camera
+  camera.resized();
+});
